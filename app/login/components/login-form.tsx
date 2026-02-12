@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -86,6 +87,11 @@ export function LoginForm() {
           >
             {loading ? "Entrando..." : "Entrar"}
           </Button>
+          <div className="text-center text-sm">
+            <Link href="/forgot-password" className="text-primary hover:underline">
+              Esqueci minha senha
+            </Link>
+          </div>
         </form>
       </CardContent>
     </Card>

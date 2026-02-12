@@ -49,12 +49,28 @@ export function useAuth() {
     router.push("/login");
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+    if (error) throw error;
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) throw error;
+  };
+
   return {
     user,
     session,
     loading,
     signIn,
     signOut,
+    resetPassword,
+    updatePassword,
     isAuthenticated: !!user,
   };
 }

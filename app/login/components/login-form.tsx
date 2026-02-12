@@ -42,9 +42,13 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Surreal Construções e Reformas
-        </CardTitle>
+        <div className="flex justify-center mb-4">
+          <img
+            src="https://gukpisxmjvmfukxhkmrt.supabase.co/storage/v1/object/public/project/logo_black.png"
+            alt="Surreal Construções e Reformas"
+            className="h-16 w-auto object-contain"
+          />
+        </div>
         <CardDescription className="text-center">
           Faça login para acessar o sistema
         </CardDescription>

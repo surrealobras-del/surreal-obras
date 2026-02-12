@@ -44,16 +44,28 @@ const SelectTrigger = React.forwardRef<
     return childrenArray.find((child) => child.type === SelectContent)
   }, [children])
 
+  interface SelectItemProps {
+    value: string
+    children: React.ReactNode
+  }
+
   const items = React.useMemo(() => {
     if (!content) return []
-    return React.Children.toArray(content.props.children) as React.ReactElement[]
+    return React.Children.toArray(content.props.children) as React.ReactElement<SelectItemProps>[]
   }, [content])
 
   const selectedItem = React.useMemo(() => {
-    return items.find((item) => item.props.value === context?.value)
+    return items.find((item) => {
+      if (React.isValidElement(item) && item.type === SelectItem) {
+        return (item.props as SelectItemProps).value === context?.value
+      }
+      return false
+    })
   }, [items, context?.value])
 
-  const selectedLabel = selectedItem?.props.children || ""
+  const selectedLabel = React.isValidElement(selectedItem) && selectedItem.type === SelectItem
+    ? (selectedItem.props as SelectItemProps).children
+    : ""
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -102,13 +114,14 @@ const SelectTrigger = React.forwardRef<
         <SelectContent>
           {items.map((item, index) => {
             if (React.isValidElement(item) && item.type === SelectItem) {
+              const itemProps = item.props as SelectItemProps
               return (
                 <SelectItem
                   key={index}
-                  value={item.props.value}
-                  onClick={() => handleItemClick(item.props.value)}
+                  value={itemProps.value}
+                  onClick={() => handleItemClick(itemProps.value)}
                 >
-                  {item.props.children}
+                  {itemProps.children}
                 </SelectItem>
               )
             }

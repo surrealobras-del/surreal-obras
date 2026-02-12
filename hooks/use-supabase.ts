@@ -18,7 +18,7 @@ export function useSupabaseQuery<T>(
 ) {
   return useQuery<T[], PostgrestError>({
     queryKey,
-    queryFn: async () => {
+    queryFn: async (): Promise<T[]> => {
       let query = supabase.from(table).select(options?.select || "*");
 
       // Aplica filtros se fornecidos
@@ -31,7 +31,7 @@ export function useSupabaseQuery<T>(
       const { data, error } = await query;
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as T[];
     },
     enabled: options?.enabled !== false,
   });

@@ -21,15 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { X, Trash2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { X } from "lucide-react";
 
 const supabase = createClient();
 
@@ -79,8 +71,6 @@ export function EditWorkForm({ workId }: EditWorkFormProps) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   // Carrega os dados da obra
   const { data: workData, isLoading: isLoadingWork } = useQuery<ApiResponse>({
@@ -269,37 +259,6 @@ export function EditWorkForm({ workId }: EditWorkFormProps) {
     }
   };
 
-  const handleDelete = async () => {
-    setDeleting(true);
-    try {
-      const { data: rpcData, error: rpcError } = await supabase.rpc(
-        "delete_building_work",
-        {
-          p_id: workId,
-        }
-      );
-
-      if (rpcError) {
-        throw new Error(rpcError.message || "Erro ao excluir obra.");
-      }
-
-      if (rpcData && !rpcData.status) {
-        throw new Error(rpcData.message || "Erro ao excluir obra.");
-      }
-
-      // Invalida as queries relacionadas
-      queryClient.invalidateQueries({ queryKey: ["building_works"] });
-      queryClient.invalidateQueries({ queryKey: ["building_work", workId] });
-
-      // Redireciona para a lista de obras
-      router.push("/obras");
-      router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Erro ao excluir obra. Tente novamente.");
-      setDeleting(false);
-      setDeleteDialogOpen(false);
-    }
-  };
 
   if (isLoadingWork) {
     return (
@@ -600,62 +559,23 @@ export function EditWorkForm({ workId }: EditWorkFormProps) {
       )}
 
       {/* Botões */}
-      <div className="flex gap-4 justify-between">
+      <div className="flex gap-4 justify-end">
         <Button
           type="button"
-          variant="destructive"
-          onClick={() => setDeleteDialogOpen(true)}
-          disabled={loading || uploading || deleting}
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={loading || uploading}
         >
-          <Trash2 className="h-4 w-4 mr-2" />
-          Excluir Obra
+          Cancelar
         </Button>
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            disabled={loading || uploading || deleting}
-          >
-            Cancelar
-          </Button>
-          <Button type="submit" disabled={loading || uploading || deleting} className="bg-primary">
-            {uploading
-              ? "Enviando imagens..."
-              : loading
-              ? "Salvando..."
-              : "Salvar Alterações"}
-          </Button>
-        </div>
+        <Button type="submit" disabled={loading || uploading} className="bg-primary">
+          {uploading
+            ? "Enviando imagens..."
+            : loading
+            ? "Salvando..."
+            : "Salvar Alterações"}
+        </Button>
       </div>
-
-      {/* Dialog de confirmação de exclusão */}
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir esta obra? Esta ação não pode ser desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteDialogOpen(false)}
-              disabled={deleting}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleting}
-            >
-              {deleting ? "Excluindo..." : "Excluir"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </form>
   );
 }

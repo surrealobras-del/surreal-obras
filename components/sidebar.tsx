@@ -46,11 +46,11 @@ export function Sidebar() {
 
   return (
     <aside className="flex flex-col w-64 border-r bg-background h-screen fixed left-0 top-0">
-      <div className="flex items-center justify-start h-16 border-b px-4">
+      <div className="flex items-center justify-start border-b px-4 py-4">
         <img
           src="https://gukpisxmjvmfukxhkmrt.supabase.co/storage/v1/object/public/project/logo_black.png"
           alt="Surreal Construções e Reformas"
-          className="h-10 w-auto object-contain"
+          className="h-14 w-auto object-contain"
         />
       </div>
 

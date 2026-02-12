@@ -18,7 +18,7 @@ export default function ConfiguracoesPage() {
 
   return (
     <AppLayout>
-      <div className="flex flex-col max-w-4xl">
+      <div className="flex flex-col w-full">
         <h1 className="text-3xl font-bold text-primary mb-6">
           Configurações
         </h1>

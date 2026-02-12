@@ -1,10 +1,9 @@
 "use client";
 
 import { AppLayout } from "@/components/app-layout";
-import { useAuth } from "@/hooks/use-auth";
+import { DashboardStats } from "./components/dashboard-stats";
 
 export default function Home() {
-  const { user } = useAuth();
 
   return (
     <AppLayout>
@@ -15,13 +14,9 @@ export default function Home() {
         <p className="text-muted-foreground mb-6">
           Bem-vindo ao sistema CRM para cadastrar obras
         </p>
-        {user && (
-          <div className="rounded-lg border p-4 bg-card">
-            <p className="text-sm text-muted-foreground">
-              Logado como: <span className="font-medium">{user.email}</span>
-            </p>
-          </div>
-        )}
+        
+        {/* Estatísticas do Dashboard */}
+        <DashboardStats />
       </div>
     </AppLayout>
   );

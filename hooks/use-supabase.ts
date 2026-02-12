@@ -1,6 +1,10 @@
+"use client";
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase-client";
 import { PostgrestError } from "@supabase/supabase-js";
+
+const supabase = createClient();
 
 // Hook genérico para queries do Supabase
 export function useSupabaseQuery<T>(
